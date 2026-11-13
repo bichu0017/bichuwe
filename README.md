@@ -28,7 +28,7 @@ The contact form submits to the API and stores messages for review in Django adm
 
 ## Deploy frontend to Vercel and API to Render
 
-The Django app remains the backend and admin service on Render. Vercel builds a static copy of the portfolio page and assets from `templates/index.html` and `static/`.
+The Django app remains the backend and admin service on Render. Its `/health/` endpoint is reserved for Render health checks so API throttling does not cause false failures. Vercel builds a static copy of the portfolio page and assets from `templates/index.html` and `static/`.
 
 1. In Render, create a Blueprint from this repository using `render.yaml`. Set `DATABASE_URL` to the PostgreSQL connection string for the production database. Render generates `DJANGO_SECRET_KEY`; the service detects its Render hostname automatically.
 2. In Vercel, import the same GitHub repository. Keep the project root at the repository root and set the Framework Preset to **Other** in Vercel's project settings so it doesn't try to run Django. Do not set a `framework` property in `vercel.json`; Vercel does not accept `other` as a config value. `vercel.json` builds and publishes `dist/`.

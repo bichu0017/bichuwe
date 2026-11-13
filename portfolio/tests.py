@@ -24,6 +24,11 @@ class PortfolioApiTests(APITestCase):
         cls._media_directory.cleanup()
         super().tearDownClass()
 
+    def test_health_check_returns_ok_without_api_throttling(self):
+        response = self.client.get("/health/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, b"ok")
+
     def test_public_can_submit_contact_message(self):
         response = self.client.post(
             "/api/contact/",
