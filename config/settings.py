@@ -150,10 +150,48 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+media_storage_config = {
+    "BACKEND": "django.core.files.storage.FileSystemStorage",
+}
+supabase_storage_env = {
+    "endpoint_url": os.getenv("SUPABASE_STORAGE_ENDPOINT", "").strip(),
+    "region_name": os.getenv("SUPABASE_STORAGE_REGION", "").strip(),
+    "bucket_name": os.getenv("SUPABASE_STORAGE_BUCKET", "").strip(),
+    "access_key": os.getenv("SUPABASE_STORAGE_ACCESS_KEY", "").strip(),
+    "secret_key": os.getenv("SUPABASE_STORAGE_SECRET_KEY", "").strip(),
+}
+if any(value for key, value in supabase_storage_env.items() if key != "region_name"):
+    missing_storage_env = [
+        env_name
+        for option, env_name in (
+            ("endpoint_url", "SUPABASE_STORAGE_ENDPOINT"),
+            ("region_name", "SUPABASE_STORAGE_REGION"),
+            ("bucket_name", "SUPABASE_STORAGE_BUCKET"),
+            ("access_key", "SUPABASE_STORAGE_ACCESS_KEY"),
+            ("secret_key", "SUPABASE_STORAGE_SECRET_KEY"),
+        )
+        if not supabase_storage_env[option]
+    ]
+    if missing_storage_env:
+        raise ImproperlyConfigured(
+            "Set all Supabase Storage environment variables. Missing: "
+            + ", ".join(missing_storage_env)
+        )
+    media_storage_config = {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            **supabase_storage_env,
+            "addressing_style": "path",
+            "signature_version": "s3v4",
+            "querystring_auth": True,
+            "querystring_expire": 3600,
+            "file_overwrite": False,
+        },
+    }
+
 STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
+    "default": media_storage_config,
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
