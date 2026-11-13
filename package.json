@@ -1,0 +1,10 @@
+{
+  "name": "bichu-biju-portfolio-frontend",
+  "private": true,
+  "scripts": {
+    "build": "node build-frontend.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -26,4 +26,15 @@ Uploaded media is stored locally in `media/` during development. File download l
 
 The contact form submits to the API and stores messages for review in Django admin. Replace the included portrait illustration with an authorized profile photo in `static/images/`.
 
+## Deploy frontend to Vercel and API to Render
+
+The Django app remains the backend and admin service on Render. Vercel builds a static copy of the portfolio page and assets from `templates/index.html` and `static/`.
+
+1. In Render, create a Blueprint from this repository using `render.yaml`. Set `DATABASE_URL` to the PostgreSQL connection string for the production database. Render generates `DJANGO_SECRET_KEY`; the service detects its Render hostname automatically.
+2. In Vercel, import the same GitHub repository. Keep the project root at the repository root; `vercel.json` builds and publishes `dist/`.
+3. After the Render service is live, add the environment variable `RENDER_API_URL` to the Vercel project, using the Render service origin (for example, `https://bichu-portfolio-api.onrender.com`), then redeploy.
+4. Add the exact Vercel site origin (for example, `https://your-site.vercel.app`, without a trailing slash) as `CORS_ALLOWED_ORIGINS` in Render and redeploy the backend.
+
+The Render service also serves Django admin and static assets. Uploaded media is not durable on Render's local filesystem; configure object storage before enabling production uploads.
+
 Run the automated test suite with `python manage.py test portfolio --settings=config.test_settings`; test settings use an isolated in-memory SQLite database and never modify the live Supabase database.

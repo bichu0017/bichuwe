@@ -32,6 +32,17 @@ class PortfolioApiTests(APITestCase):
         )
         self.assertEqual(response.status_code, 201)
 
+    @override_settings(CORS_ALLOWED_ORIGINS=["https://portfolio.vercel.app"])
+    def test_api_allows_configured_frontend_origin(self):
+        response = self.client.get(
+            "/api/profile/",
+            HTTP_ORIGIN="https://portfolio.vercel.app",
+        )
+        self.assertEqual(
+            response["access-control-allow-origin"],
+            "https://portfolio.vercel.app",
+        )
+
     def test_public_cannot_modify_skills(self):
         response = self.client.post("/api/skills/", {"name": "New skill", "category": "Testing"})
         self.assertEqual(response.status_code, 403)

@@ -1,7 +1,12 @@
 const menuButton = document.querySelector(".menu-toggle");
 const navLinks = document.querySelector(".nav-links");
+const apiBaseUrl = (window.PORTFOLIO_API_BASE_URL || "").replace(/\/+$/, "");
+const apiUrl = (path) => `${apiBaseUrl}${path}`;
+
 document.querySelectorAll('a[href^="/admin-dashboard/"]').forEach((link) => {
-  if (window.location.port === "5500") {
+  if (apiBaseUrl) {
+    link.href = apiUrl(link.getAttribute("href"));
+  } else if (window.location.port === "5500") {
     link.href = `${window.location.protocol}//${window.location.hostname}:8000${link.getAttribute("href")}`;
   }
 });
@@ -56,7 +61,7 @@ const setText = (selector, value) => {
 };
 
 const getResults = async (endpoint) => {
-  const response = await fetch(endpoint);
+  const response = await fetch(apiUrl(endpoint));
   if (!response.ok) throw new Error(`${endpoint} returned ${response.status}`);
   const payload = await response.json();
   return Array.isArray(payload) ? payload : payload.results ?? [];
@@ -359,10 +364,11 @@ document.querySelector("#contact-form").addEventListener("submit", async (event)
   submitButton.disabled = true;
   status.textContent = "Sending your message…";
   try {
-    const csrfToken = form.querySelector('[name="csrfmiddlewaretoken"]').value;
-    const response = await fetch("/api/contact/", {
+    const csrfField = form.querySelector('[name="csrfmiddlewaretoken"]');
+    const headers = csrfField ? { "X-CSRFToken": csrfField.value } : {};
+    const response = await fetch(apiUrl("/api/contact/"), {
       method: "POST",
-      headers: { "X-CSRFToken": csrfToken },
+      headers,
       body: new FormData(form),
     });
     if (!response.ok) {
