@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#ffffff">
+    <title>Edit portfolio profile | Bichu Biju</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css?v=7">
+  </head>
+  <body class="editor-page">
+    <header class="site-header">
+      <nav class="nav-shell editor-nav" aria-label="Admin navigation">
+        <a class="editor-wordmark" href="/">Bichu Biju <span>Portfolio editor</span></a>
+        <div class="editor-nav-actions">
+          <a href="/admin-dashboard/portfolio/resume/">Manage resume</a>
+          <a href="/admin-dashboard/portfolio/certification/">Manage certificates</a>
+          <a href="/admin-dashboard/logout/">Log out</a>
+        </div>
+      </nav>
+    </header>
+    <main class="editor-main">
+      <div class="editor-heading">
+        <span class="section-kicker">ADMIN DASHBOARD</span>
+        <h1>Edit your portfolio</h1>
+        <p>Update your details here. Saved changes appear on the public portfolio.</p>
+      </div>
+
+      {% if messages %}
+        {% for message in messages %}
+          <p class="editor-message" role="status">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+
+      <form class="editor-form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+          <div class="editor-errors" role="alert">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <section class="editor-section">
+          <h2>Basic information</h2>
+          <div class="editor-fields">
+            {% for field in form %}
+              {% if field.name == "full_name" or field.name == "professional_title" or field.name == "email" or field.name == "phone" or field.name == "location" %}
+                <div class="editor-field">
+                  {{ field.label_tag }}
+                  {{ field }}
+                  {% if field.errors %}<span class="editor-errors">{{ field.errors|striptags }}</span>{% endif %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </section>
+
+        <section class="editor-section">
+          <h2>About you</h2>
+          <div class="editor-fields editor-fields-single">
+            {% for field in form %}
+              {% if field.name == "introduction" or field.name == "biography" %}
+                <div class="editor-field">
+                  {{ field.label_tag }}
+                  {{ field }}
+                  {% if field.errors %}<span class="editor-errors">{{ field.errors|striptags }}</span>{% endif %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </section>
+
+        <section class="editor-section">
+          <h2>Profile photo</h2>
+          <p class="editor-help">Add up to three photos. They rotate automatically on your public profile every three seconds.</p>
+          {% for field in form %}
+            {% if field.name == "profile_image" or field.name == "profile_image_2" or field.name == "profile_image_3" %}
+              <div class="editor-field">
+                {{ field.label_tag }}
+                {% if field.value %}<p class="current-image">Current photo: <a href="{{ field.value.url }}">{{ field.value.name }}</a></p>{% endif %}
+                {{ field }}
+                {% if field.errors %}<span class="editor-errors">{{ field.errors|striptags }}</span>{% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </section>
+
+        <section class="editor-section">
+          <h2>Social media</h2>
+          <div class="editor-fields">
+            {% for field in form %}
+              {% if field.name == "linkedin_url" or field.name == "github_url" or field.name == "instagram_url" %}
+                <div class="editor-field">
+                  {{ field.label_tag }}
+                  {{ field }}
+                  {% if field.errors %}<span class="editor-errors">{{ field.errors|striptags }}</span>{% endif %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </section>
+
+        <div class="editor-submit">
+          <button class="button button-primary" type="submit">Save profile changes</button>
+          <a class="button button-quiet" href="/">View portfolio</a>
+        </div>
+      </form>
+
+      <section class="editor-shortcuts" aria-label="Other portfolio content">
+        <h2>Manage other content</h2>
+        <a href="/admin-dashboard/portfolio/resume/">Resume uploads <span aria-hidden="true">↗</span></a>
+        <a href="/admin-dashboard/portfolio/certification/">Certificates <span aria-hidden="true">↗</span></a>
+        <a href="/admin-dashboard/portfolio/project/">Projects <span aria-hidden="true">↗</span></a>
+        <a href="/admin-dashboard/portfolio/skill/">Skills <span aria-hidden="true">↗</span></a>
+      </section>
+    </main>
+  </body>
+</html>

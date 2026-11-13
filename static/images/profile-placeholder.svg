@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="740" viewBox="0 0 620 740" role="img" aria-labelledby="title desc">
+  <title id="title">Portrait placeholder</title>
+  <desc id="desc">A calm teal-toned placeholder illustration until a profile photo is added.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#dce8e2"/>
+      <stop offset="1" stop-color="#b6cec4"/>
+    </linearGradient>
+    <linearGradient id="shirt" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#f8faf8"/>
+      <stop offset="1" stop-color="#dce6e1"/>
+    </linearGradient>
+  </defs>
+  <rect width="620" height="740" fill="url(#background)"/>
+  <circle cx="475" cy="125" r="148" fill="#eaf1ed" opacity=".56"/>
+  <path d="M77 740c18-148 100-231 233-231s215 83 233 231" fill="url(#shirt)"/>
+  <path d="M220 510c25 41 61 63 90 63s65-22 90-63v-79H220z" fill="#bd8971"/>
+  <ellipse cx="310" cy="310" rx="133" ry="165" fill="#c8957d"/>
+  <path d="M180 294c-12-114 37-184 135-184 94 0 144 62 128 191l-18 50c-6-73-19-113-51-149-48 38-105 59-187 63l-1 67z" fill="#252c2a"/>
+  <path d="M242 319c15-10 33-10 48-1M333 318c15-10 33-10 48-1" fill="none" stroke="#413430" stroke-linecap="round" stroke-width="7"/>
+  <circle cx="267" cy="337" r="5" fill="#292725"/><circle cx="354" cy="337" r="5" fill="#292725"/>
+  <path d="M294 389c12 10 27 10 39 0" fill="none" stroke="#895d51" stroke-linecap="round" stroke-width="5"/>
+  <path d="M264 464c27 14 64 14 92 0" fill="none" stroke="#b57f6c" stroke-linecap="round" stroke-width="3"/>
+  <path d="m261 565 49 67 49-67M310 632v108" fill="none" stroke="#c6d5ce" stroke-width="3"/>
+  <text x="310" y="688" fill="#547269" font-family="Arial, sans-serif" font-size="12" letter-spacing="3" text-anchor="middle">ADD YOUR PHOTO</text>
+</svg>
