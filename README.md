@@ -35,13 +35,14 @@ The Django app remains the backend and admin service on Render. Its `/health/` e
 3. After the Render service is live, add the environment variable `RENDER_API_URL` to the Vercel project, using the Render service origin (for example, `https://bichu-portfolio-api.onrender.com`), then redeploy.
 4. Add the exact Vercel site origin (for example, `https://your-site.vercel.app`, without a trailing slash) as `CORS_ALLOWED_ORIGINS` in Render and redeploy the backend.
 
-The Render service also serves Django admin and static assets. Uploaded media is stored locally unless Supabase Storage is configured. To keep uploads across Render restarts, create a bucket in Supabase Storage and configure the following Render environment variables using the bucket's S3-compatible credentials from Supabase **Storage → S3 Connection**:
+The Render service also serves Django admin and static assets. General uploaded media remains on the local filesystem; profile images are stored in Supabase Storage. To keep profile images across Render restarts, create a **public** bucket in Supabase Storage and configure these Render environment variables using the bucket's S3-compatible credentials from Supabase **Storage → S3 Connection**:
 
-- `SUPABASE_STORAGE_ENDPOINT`: `https://<project-ref>.supabase.co/storage/v1/s3`
+- `SUPABASE_URL`: `https://<project-ref>.supabase.co`
+- `SUPABASE_STORAGE_ENDPOINT`: `https://<project-ref>.storage.supabase.co/storage/v1/s3`
 - `SUPABASE_STORAGE_REGION`: the region shown in Supabase S3 Connection
 - `SUPABASE_STORAGE_BUCKET`: the bucket name
 - `SUPABASE_STORAGE_ACCESS_KEY` and `SUPABASE_STORAGE_SECRET_KEY`: the S3 access key pair (not the Supabase database password, anon key, or service-role key)
 
-Set all five values, then redeploy Render. Django will use signed, time-limited URLs for files stored in the private bucket. After deployment, re-upload profile photos that were previously stored on Render's temporary filesystem; those existing files are not copied automatically.
+Set the URL, endpoint, bucket, and key pair; the region defaults to `us-east-1` if omitted. Then redeploy Render. Profile image URLs are public, so the bucket must be public. Re-upload profile photos that were previously stored on Render's temporary filesystem; those existing files are not copied automatically.
 
 Run the automated test suite with `python manage.py test portfolio --settings=config.test_settings`; test settings use an isolated in-memory SQLite database and never modify the live Supabase database.

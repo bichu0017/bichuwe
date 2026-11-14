@@ -1,3 +1,4 @@
+from django.core.files.storage import storages
 from django.core.validators import FileExtensionValidator, MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.text import slugify
@@ -8,9 +9,33 @@ from .validators import validate_certificate_file, validate_document_file, valid
 class Profile(models.Model):
     full_name = models.CharField(max_length=120, default="Bichu Biju")
     professional_title = models.CharField(max_length=160, default="AI/ML Enthusiast")
-    profile_image = models.ImageField(upload_to="profile/", blank=True, validators=[FileExtensionValidator(["jpg", "jpeg", "png", "webp"]), validate_image_size])
-    profile_image_2 = models.ImageField(upload_to="profile/", blank=True, validators=[FileExtensionValidator(["jpg", "jpeg", "png", "webp"]), validate_image_size])
-    profile_image_3 = models.ImageField(upload_to="profile/", blank=True, validators=[FileExtensionValidator(["jpg", "jpeg", "png", "webp"]), validate_image_size])
+    profile_image = models.ImageField(
+        upload_to="profile/",
+        storage=storages["profile_images"],
+        blank=True,
+        validators=[
+            FileExtensionValidator(["jpg", "jpeg", "png", "webp"]),
+            validate_image_size,
+        ],
+    )
+    profile_image_2 = models.ImageField(
+        upload_to="profile/",
+        storage=storages["profile_images"],
+        blank=True,
+        validators=[
+            FileExtensionValidator(["jpg", "jpeg", "png", "webp"]),
+            validate_image_size,
+        ],
+    )
+    profile_image_3 = models.ImageField(
+        upload_to="profile/",
+        storage=storages["profile_images"],
+        blank=True,
+        validators=[
+            FileExtensionValidator(["jpg", "jpeg", "png", "webp"]),
+            validate_image_size,
+        ],
+    )
     introduction = models.TextField(blank=True)
     biography = models.TextField(blank=True)
     email = models.EmailField(blank=True)
