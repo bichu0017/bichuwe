@@ -11,6 +11,9 @@ STORAGES = {
     "staticfiles": {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
+    "profile_images": {
+        "BACKEND": "django.core.files.storage.InMemoryStorage",
+    },
 }
 
 DATABASES = {

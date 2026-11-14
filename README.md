@@ -37,12 +37,12 @@ The Django app remains the backend and admin service on Render. Its `/health/` e
 
 The Render service also serves Django admin and static assets. General uploaded media remains on the local filesystem; profile images are stored in Supabase Storage. To keep profile images across Render restarts, create a **public** bucket in Supabase Storage and configure these Render environment variables using the bucket's S3-compatible credentials from Supabase **Storage → S3 Connection**:
 
-- `SUPABASE_URL`: `https://<project-ref>.supabase.co`
+- `SUPABASE_URL`: `https://<project-ref>.supabase.co` (optional for the standard endpoint below; set it for custom domains)
 - `SUPABASE_STORAGE_ENDPOINT`: `https://<project-ref>.storage.supabase.co/storage/v1/s3`
 - `SUPABASE_STORAGE_REGION`: the region shown in Supabase S3 Connection
 - `SUPABASE_STORAGE_BUCKET`: the bucket name
 - `SUPABASE_STORAGE_ACCESS_KEY` and `SUPABASE_STORAGE_SECRET_KEY`: the S3 access key pair (not the Supabase database password, anon key, or service-role key)
 
-Set the URL, endpoint, bucket, and key pair; the region defaults to `us-east-1` if omitted. Then redeploy Render. Profile image URLs are public, so the bucket must be public. Re-upload profile photos that were previously stored on Render's temporary filesystem; those existing files are not copied automatically.
+Set the endpoint, bucket, and key pair; the region defaults to `us-east-1` if omitted. For the standard endpoint, Django derives the public project URL automatically. Then redeploy Render. Profile image URLs are public, so the bucket must be public. Re-upload profile photos that were previously stored on Render's temporary filesystem; those existing files are not copied automatically.
 
 Run the automated test suite with `python manage.py test portfolio --settings=config.test_settings`; test settings use an isolated in-memory SQLite database and never modify the live Supabase database.

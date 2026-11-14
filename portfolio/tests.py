@@ -1,5 +1,7 @@
 from io import BytesIO
+import os
 import tempfile
+from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -8,6 +10,7 @@ from PIL import Image
 from rest_framework.test import APITestCase
 
 from .models import PortfolioDocument, Profile, Project, Resume
+from .storage import ProfileImageStorage
 
 
 class PortfolioApiTests(APITestCase):
@@ -28,6 +31,24 @@ class PortfolioApiTests(APITestCase):
         response = self.client.get("/health/")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content, b"ok")
+
+    def test_profile_image_url_uses_standard_supabase_endpoint_without_project_url(self):
+        with patch.dict(
+            os.environ,
+            {
+                "SUPABASE_STORAGE_ENDPOINT": "https://example.storage.supabase.co/storage/v1/s3",
+                "SUPABASE_STORAGE_BUCKET": "portfolio",
+                "SUPABASE_STORAGE_ACCESS_KEY": "test-access-key",
+                "SUPABASE_STORAGE_SECRET_KEY": "test-secret-key",
+            },
+            clear=True,
+        ):
+            storage = ProfileImageStorage()
+
+            self.assertEqual(
+                storage.url("profile/photo.png"),
+                "https://example.supabase.co/storage/v1/object/public/portfolio/profile/photo.png",
+            )
 
     def test_public_can_submit_contact_message(self):
         response = self.client.post(
